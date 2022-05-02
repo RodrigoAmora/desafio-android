@@ -1,17 +1,21 @@
 package com.picpay.desafio.android.ui
 
+import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.picpay.desafio.android.R
-import com.picpay.desafio.android.User
-import com.picpay.desafio.android.UserListAdapter
+import com.picpay.desafio.android.model.User
+import com.picpay.desafio.android.ui.user.UserListAdapter
 import com.picpay.desafio.android.service.PicPayService
+import com.picpay.desafio.android.ui.user.UserFragment
+import com.picpay.desafio.android.util.FragmentUtil
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,10 +52,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onResume() {
         super.onResume()
+        changeFragment(UserFragment(), null, false)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        progressBar = findViewById(R.id.user_list_progress_bar)
-
+        //recyclerView = findViewById(R.id.recyclerView)
+        //progressBar = findViewById(R.id.user_list_progress_bar)
+/*
         adapter = UserListAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -75,5 +80,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     adapter.users = response.body()!!
                 }
             })
+
+ */
+    }
+
+    private fun changeFragment(fragment: Fragment, bundle: Bundle?, backstack: Boolean) {
+        FragmentUtil.changeFragment(R.id.container, fragment, getSupportFragmentManager(), backstack, bundle)
     }
 }
