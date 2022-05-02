@@ -4,7 +4,7 @@
     package="com.picpay.desafio.android">
 
     <!--PERMISSIONS-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
