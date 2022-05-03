@@ -1,6 +1,7 @@
 package com.picpay.desafio.android.ui
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -25,9 +26,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    override fun onResume() {
-        super.onResume()
-        changeFragment(UserFragment(), null, false)
+    val USER_FRAGMENT = "USER_FRAGMENT"
+
+    lateinit var userFragment: UserFragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        if (savedInstanceState != null) {
+            userFragment = getSupportFragmentManager().
+                            getFragment(savedInstanceState, USER_FRAGMENT) as UserFragment
+        } else {
+            userFragment = UserFragment()
+            changeFragment(userFragment, null, false)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        getSupportFragmentManager().putFragment(outState,
+                                                USER_FRAGMENT,
+                                                userFragment)
     }
 
     private fun changeFragment(fragment: Fragment, bundle: Bundle?, backstack: Boolean) {

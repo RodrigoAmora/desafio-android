@@ -1,6 +1,7 @@
 package com.picpay.desafio.android.ui.user
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,15 +19,20 @@ import java.nio.channels.Selector
 
 class UserFragment : Fragment() {
 
+    val USER_LIST = "user_list"
+
     lateinit var viewModel: UserViewModel
 
     lateinit var progressBar: ProgressBar
     lateinit var recyclerView: RecyclerView
 
-    lateinit var users: List<User>
+    var users: ArrayList<User>? = null
 
-    override fun onStart() {
-        super.onStart()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            users = savedInstanceState?.getParcelableArrayList<User>(USER_LIST)!!
+        }
     }
 
     override fun onCreateView(
@@ -43,17 +49,22 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getUser()
         initViews()
         configureRecyclerView()
+
+        if (users == null) {
+            getUser()
+        } else {
+            populateRecyclerView(users!!)
+        }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(USER_LIST, users)
     }
 
     private fun getUser() {
-        //viewModel.loadUsers()
         viewModel = UserViewModel(context?.applicationContext!!, this)
     }
 
@@ -78,9 +89,10 @@ class UserFragment : Fragment() {
 
     }
 
-    fun populateRecyclerView(users: List<User>) {
+    fun populateRecyclerView(usersList: List<User>) {
+        users = usersList as ArrayList<User>
         val adapter = UserListAdapter()
-        adapter.users = users
+        adapter.users = users as ArrayList<User>
         recyclerView.adapter = adapter
     }
 
