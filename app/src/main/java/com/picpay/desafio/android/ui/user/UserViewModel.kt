@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.picpay.desafio.android.R
 import com.picpay.desafio.android.datasource.UserDataSource
 import com.picpay.desafio.android.model.User
+import com.picpay.desafio.android.util.CacheUtil
 import com.picpay.desafio.android.util.NetworkUtil
 
 class UserViewModel(context: Context, view: UserFragment): ViewModel() {
@@ -15,10 +16,6 @@ class UserViewModel(context: Context, view: UserFragment): ViewModel() {
 
     val context: Context = context
     val view: UserFragment = view
-
-    init {
-        loadUsers()
-    }
 
     fun loadUsers() {
         if (NetworkUtil.checkConnection(context)) {
@@ -35,7 +32,11 @@ class UserViewModel(context: Context, view: UserFragment): ViewModel() {
                 view.showMessage(context.getString(R.string.error))
             })
         } else {
+            val cacheUtil = CacheUtil<List<User>>()
+            val userList: List<User>? = cacheUtil.getCache("cache_user")
+
             view.showMessage(context.getString(R.string.error_no_internet))
+            userList?.let { view.populateRecyclerView(it) }
         }
     }
 

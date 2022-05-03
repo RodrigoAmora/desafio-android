@@ -66,10 +66,13 @@ class UserFragment : Fragment() {
 
     private fun getUser() {
         viewModel = UserViewModel(context?.applicationContext!!, this)
+        viewModel.loadUsers()
     }
 
     private fun initViews() {
         progressBar = progress_bar
+        progressBar.visibility - View.VISIBLE
+
         recyclerView = list_users
     }
 
@@ -85,14 +88,16 @@ class UserFragment : Fragment() {
         recyclerView.setItemAnimator(DefaultItemAnimator())
         recyclerView.setLayoutManager(linearLayout)
         recyclerView.setNestedScrollingEnabled(false)
-
-
     }
 
     fun populateRecyclerView(usersList: List<User>) {
+        progressBar.visibility - View.GONE
+
         users = usersList as ArrayList<User>
+
         val adapter = UserListAdapter()
         adapter.users = users as ArrayList<User>
+
         recyclerView.adapter = adapter
     }
 
